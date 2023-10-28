@@ -1,20 +1,59 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
+import * as eva from "@eva-design/eva";
+import {
+  ApplicationProvider,
+  Divider,
+  IconRegistry,
+  Layout,
+  Text,
+  TopNavigation,
+} from "@ui-kitten/components";
+import { default as theme } from "./assets/theme/custom-theme.json";
+import { EvaIconsPack } from "@ui-kitten/eva-icons";
+import { List, ListItem } from "@ui-kitten/components";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+const data = new Array(8).fill({
+  title: "Phase",
+});
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  list: {
+    maxHeight: "60%",
+    width: "100%",
+    textAlign: "center",
+    paddingHorizontal: 20,
   },
 });
+
+export default () => {
+  const renderItem = ({ item, index }) => (
+    <ListItem
+      title={() => (
+        <Text category="p1">
+          {item.title} {index + 1}
+        </Text>
+      )}
+    />
+  );
+
+  return (
+    <>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
+        <Layout style={styles.container}>
+          <Text category="h1" style={{ textAlign: "center" }}>
+            Simple Workout Tracker
+          </Text>
+          <Text category="h3">Phases</Text>
+          <List data={data} renderItem={renderItem} style={styles.list} />
+        </Layout>
+      </ApplicationProvider>
+    </>
+  );
+};
