@@ -3,11 +3,9 @@ import { SafeAreaView, StyleSheet } from "react-native";
 import * as eva from "@eva-design/eva";
 import {
   ApplicationProvider,
-  Divider,
   IconRegistry,
   Layout,
-  Text,
-  TopNavigation,
+  Text
 } from "@ui-kitten/components";
 import { default as theme } from "./assets/theme/custom-theme.json";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
