@@ -5,6 +5,7 @@ import { HomeScreen } from "./home.component";
 import { WeekListScreen } from "./week-list.component";
 import { DayListScreen } from "./day-list.component";
 import { ExerciseListScreen } from "./exercise-list.component";
+import { ExerciseManagerScreen } from "./exercise-manager.component";
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -14,6 +15,7 @@ const HomeNavigator = () => (
     <Screen name="Weeks" component={WeekListScreen} />
     <Screen name="Days" component={DayListScreen} />
     <Screen name="Exercises" component={ExerciseListScreen} />
+    <Screen name="ExerciseManager" component={ExerciseManagerScreen} />
   </Navigator>
 );
 

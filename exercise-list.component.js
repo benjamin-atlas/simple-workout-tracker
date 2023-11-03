@@ -20,9 +20,14 @@ const styles = StyleSheet.create({
 
 export const ExerciseListScreen = ({ navigation, route }) => {
   /* Navigation */
-  // const navigateDays = (week) => {
-  //   navigation.navigate("Days", { week });
-  // };
+  const navigateManager = (exercise) => {
+    navigation.navigate("ExerciseManager", {
+      phase: route.params.phase,
+      week: route.params.week,
+      day: route.params.day,
+      exercise
+    });
+  };
 
   /* State */
   const exercises = useSelector(
@@ -33,11 +38,11 @@ export const ExerciseListScreen = ({ navigation, route }) => {
   );
 
   /* Component View */
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item, index }) => (
     <ListItem
       title={() => <Text category="p1">{item.workoutTitle}</Text>}
       onPress={() => {
-        // navigateDays(index);
+        navigateManager(index);
       }}
     />
   );
