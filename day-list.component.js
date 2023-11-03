@@ -37,16 +37,10 @@ export const DayListScreen = ({ navigation, route }) => {
   /* Component View */
   const renderItem = ({ item, index }) => (
     <ListItem
-      title={() => (
-        <Text
-          category="p1"
-          onPress={() => {
-            navigateExercise(index);
-          }}
-        >
-          {item.title}
-        </Text>
-      )}
+      title={() => <Text category="p1">{item.title}</Text>}
+      onPress={() => {
+        navigateExercise(index);
+      }}
     />
   );
 

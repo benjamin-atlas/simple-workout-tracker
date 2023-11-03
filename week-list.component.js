@@ -32,16 +32,10 @@ export const WeekListScreen = ({ navigation, route }) => {
   /* Component View */
   const renderItem = ({ item, index }) => (
     <ListItem
-      title={() => (
-        <Text
-          category="p1"
-          onPress={() => {
-            navigateDays(index);
-          }}
-        >
-          {item.week}
-        </Text>
-      )}
+      title={() => <Text category="p1">{item.week}</Text>}
+      onPress={() => {
+        navigateDays(index);
+      }}
     />
   );
 

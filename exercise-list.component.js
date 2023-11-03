@@ -35,16 +35,10 @@ export const ExerciseListScreen = ({ navigation, route }) => {
   /* Component View */
   const renderItem = ({ item }) => (
     <ListItem
-      title={() => (
-        <Text
-          category="p1"
-          onPress={() => {
-            // navigateDays(index);
-          }}
-        >
-          {item.workoutTitle}
-        </Text>
-      )}
+      title={() => <Text category="p1">{item.workoutTitle}</Text>}
+      onPress={() => {
+        // navigateDays(index);
+      }}
     />
   );
 
@@ -58,7 +52,7 @@ export const ExerciseListScreen = ({ navigation, route }) => {
           ...styles.container,
         }}
       >
-        <Text category="h3">Days</Text>
+        <Text category="h3">Exercises</Text>
         <List data={exercises} renderItem={renderItem} style={styles.list} />
       </Layout>
     </SafeAreaView>

@@ -37,16 +37,10 @@ export const HomeScreen = ({ navigation }) => {
   /* Component View */
   const renderItem = ({ item, index }) => (
     <ListItem
-      title={() => (
-        <Text
-          category="p1"
-          onPress={() => {
-            navigateWeeks(index);
-          }}
-        >
-          Phase {index + 1}
-        </Text>
-      )}
+      title={() => <Text category="p1">Phase {index + 1}</Text>}
+      onPress={() => {
+        navigateWeeks(index);
+      }}
     />
   );
 
