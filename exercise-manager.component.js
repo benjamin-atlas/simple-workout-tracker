@@ -31,7 +31,6 @@ export const ExerciseManagerScreen = ({ route }) => {
       ].exercises
   );
 
-  console.log("route.params.exercise: ", route.params.exercise);
   const [selectedIndex, setSelectedIndex] = useState(route.params.exercise);
 
   return (
