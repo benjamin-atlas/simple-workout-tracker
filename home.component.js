@@ -1,22 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
-import {
-  Divider,
-  Layout,
-  List,
-  ListItem,
-  Spinner,
-  Text,
-  TopNavigation,
-} from "@ui-kitten/components";
-import { initializeApp } from "firebase/app";
-import { signInWithEmailAndPassword, initializeAuth } from "firebase/auth";
-import {
-  getReactNativePersistence,
-  ReactNativeAsyncStorage,
-} from "firebase/auth";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { Layout, List, ListItem, Spinner, Text } from "@ui-kitten/components";
+import { populateProgramAsync } from "./state/program/programSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const styles = StyleSheet.create({
   container: {
@@ -37,46 +24,13 @@ export const HomeScreen = ({ navigation }) => {
     navigation.navigate("Weeks");
   };
 
-  const firebaseConfig = {
-    apiKey: process.env.EXPO_PUBLIC_API_KEY,
-    authDomain: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
-    databaseURL: process.env.EXPO_PUBLIC_DATABASE_URL,
-    projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
-    storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
-    messagingSenderId: process.env.EXPO_PUBLIC_MESSAGING_SENDER_ID,
-    appId: process.env.EXPO_PUBLIC_APP_ID,
-    measurementId: process.env.EXPO_PUBLIC_MEASUREMENT_ID,
-  };
-
-  const [data, setData] = useState([]);
-
+  const dispatch = useDispatch();
   useEffect(() => {
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const auth = initializeAuth(app, {
-      persistence: getReactNativePersistence(ReactNativeAsyncStorage),
-    });
-
-    signInWithEmailAndPassword(
-      auth,
-      process.env.EXPO_PUBLIC_EMAIL,
-      process.env.EXPO_PUBLIC_PASSWORD
-    )
-      .then(() => {
-        onValue(
-          ref(database, `program`),
-          (snapshot) => {
-            setData(snapshot.val());
-          },
-          (err) => {
-            console.log(`An error occured fetching the program: ${err}`);
-          }
-        );
-      })
-      .catch((err) => {
-        console.log(`An error occured signing in: ${err}`);
-      });
+    dispatch(populateProgramAsync());
   }, []);
+
+  const program = useSelector((state) => state.program.value);
+  const programLoading = useSelector((state) => state.program.status);
 
   const renderItem = ({ item, index }) => (
     <ListItem
@@ -98,13 +52,13 @@ export const HomeScreen = ({ navigation }) => {
           ...styles.container,
         }}
       >
-        {data.length ? (
+        {programLoading !== "pending" ? (
           <>
             <Text category="h1" style={{ textAlign: "center" }}>
               Simple Workout Tracker
             </Text>
             <Text category="h3">Phases</Text>
-            <List data={data} renderItem={renderItem} style={styles.list} />
+            <List data={program} renderItem={renderItem} style={styles.list} />
           </>
         ) : (
           <Spinner size="giant" />
