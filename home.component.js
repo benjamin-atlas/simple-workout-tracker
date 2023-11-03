@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
-import { Divider, Layout, Text, TopNavigation } from "@ui-kitten/components";
-import { List, ListItem } from "@ui-kitten/components";
+import {
+  Divider,
+  Layout,
+  List,
+  ListItem,
+  Spinner,
+  Text,
+  TopNavigation,
+} from "@ui-kitten/components";
 import { initializeApp } from "firebase/app";
 import { signInWithEmailAndPassword, initializeAuth } from "firebase/auth";
 import {
@@ -72,7 +79,13 @@ export const HomeScreen = ({ navigation }) => {
   }, []);
 
   const renderItem = ({ item, index }) => (
-    <ListItem title={() => <Text category="p1" onPress={navigateWeeks}>Phase {index + 1}</Text>} />
+    <ListItem
+      title={() => (
+        <Text category="p1" onPress={navigateWeeks}>
+          Phase {index + 1}
+        </Text>
+      )}
+    />
   );
 
   return (
@@ -85,11 +98,17 @@ export const HomeScreen = ({ navigation }) => {
           ...styles.container,
         }}
       >
-        <Text category="h1" style={{ textAlign: "center" }}>
-          Simple Workout Tracker
-        </Text>
-        <Text category="h3">Phases</Text>
-        <List data={data} renderItem={renderItem} style={styles.list} />
+        {data.length ? (
+          <>
+            <Text category="h1" style={{ textAlign: "center" }}>
+              Simple Workout Tracker
+            </Text>
+            <Text category="h3">Phases</Text>
+            <List data={data} renderItem={renderItem} style={styles.list} />
+          </>
+        ) : (
+          <Spinner size="giant" />
+        )}
       </Layout>
     </SafeAreaView>
   );
