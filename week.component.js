@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
-import { Divider, Layout, Text, TopNavigation } from "@ui-kitten/components";
-import { List, ListItem } from "@ui-kitten/components";
-import { initializeApp } from "firebase/app";
-import { signInWithEmailAndPassword, initializeAuth } from "firebase/auth";
-import {
-  getReactNativePersistence,
-  ReactNativeAsyncStorage,
-} from "firebase/auth";
-import { getDatabase, ref, onValue } from "firebase/database";
 
 const styles = StyleSheet.create({
   container: {
