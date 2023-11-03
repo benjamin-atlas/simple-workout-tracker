@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
 import { Layout, List, ListItem, Spinner, Text } from "@ui-kitten/components";
@@ -20,10 +20,12 @@ const styles = StyleSheet.create({
 });
 
 export const HomeScreen = ({ navigation }) => {
-  const navigateWeeks = () => {
-    navigation.navigate("Weeks");
+  /* Navigation */
+  const navigateWeeks = (phase) => {
+    navigation.navigate("Weeks", { phase });
   };
 
+  /* State */
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(populateProgramAsync());
@@ -32,10 +34,16 @@ export const HomeScreen = ({ navigation }) => {
   const program = useSelector((state) => state.program.value);
   const programLoading = useSelector((state) => state.program.status);
 
+  /* Component View */
   const renderItem = ({ item, index }) => (
     <ListItem
       title={() => (
-        <Text category="p1" onPress={navigateWeeks}>
+        <Text
+          category="p1"
+          onPress={() => {
+            navigateWeeks(index);
+          }}
+        >
           Phase {index + 1}
         </Text>
       )}
