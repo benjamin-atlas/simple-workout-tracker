@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
-import { Icon, Layout, List, ListItem, Spinner, Text } from "@ui-kitten/components";
+import { Button, Layout, Spinner, Text } from "@ui-kitten/components";
 import { populateProgramAsync } from "./state/program/programSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@ui-kitten/components";
@@ -22,8 +22,36 @@ const styles = StyleSheet.create({
 
 export const HomeScreen = ({ navigation }) => {
   /* Navigation */
-  const navigateWeeks = (phase) => {
-    navigation.navigate("Weeks", { phase });
+  const navigatePhases = () => {
+    navigation.navigate("Phases");
+  };
+
+  const navigateCurrentExercise = () => {
+    let currentExerciseIndex = 0;
+    let currentDayIndex = 0;
+    let currentWeekIndex = 0;
+    let currentPhaseIndex = 0;
+
+    program.find((phase, phaseIndex) => {
+      currentPhaseIndex = phaseIndex;
+      return phase.weeks.find((week, weekIndex) => {
+        currentWeekIndex = weekIndex;
+        return week.days.find((day, dayIndex) => {
+          currentDayIndex = dayIndex;
+          return day.exercises.find((exercise, exerciseIndex) => {
+            currentExerciseIndex = exerciseIndex;
+            return !exercise.lsrpe;
+          });
+        });
+      });
+    });
+
+    navigation.navigate("ExerciseManager", {
+      phase: currentPhaseIndex,
+      week: currentWeekIndex,
+      day: currentDayIndex,
+      exercise: currentExerciseIndex,
+    });
   };
 
   /* State */
@@ -37,49 +65,6 @@ export const HomeScreen = ({ navigation }) => {
 
   /* Component View */
   const theme = useTheme();
-
-  const renderItem = ({ item, index }) => {
-    const completedExercises = item.weeks.reduce((acc, week) => {
-      return (
-        acc +
-        week.days.reduce((acc, day) => {
-          return acc + day.exercises.reduce((acc, exercise) => {
-            return acc + (exercise.lsrpe ? 1 : 0);
-          }, 0);
-        }, 0)
-      );
-    }, 0);
-
-    const totalExercises = item.weeks.reduce((acc, week) => {
-      return (
-        acc +
-        week.days.reduce((acc, day) => {
-          return acc + day.exercises.length;
-        }, 0)
-      );
-    }, 0);
-
-    const phaseComplete = completedExercises === totalExercises;
-
-    return (
-      <ListItem
-        accessoryRight={(props) =>
-          phaseComplete && (
-            <Icon
-              {...props}
-              name="checkmark-outline"
-              fill={theme["color-success-500"]}
-            ></Icon>
-          )
-        }
-        title={() => <Text category="h6">Phase {index + 1}</Text>}
-        description={() => !phaseComplete && <Text category="s2">{Math.floor(completedExercises/totalExercises * 100)}% complete</Text>}
-        onPress={() => {
-          navigateWeeks(index);
-        }}
-      />
-    );
-  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -96,8 +81,8 @@ export const HomeScreen = ({ navigation }) => {
             <Text category="h1" style={{ textAlign: "center" }}>
               Simple Workout Tracker
             </Text>
-            <Text category="h3">Phases</Text>
-            <List data={program} renderItem={renderItem} style={styles.list} />
+            <Button onPress={navigateCurrentExercise}>Resume</Button>
+            <Button onPress={navigatePhases}>View Program</Button>
           </>
         ) : (
           <Spinner size="giant" />
