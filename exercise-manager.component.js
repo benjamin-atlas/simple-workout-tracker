@@ -1,8 +1,17 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native";
-import { Layout, Text, ViewPager } from "@ui-kitten/components";
-import { useSelector } from "react-redux";
+import { View, SafeAreaView } from "react-native";
+import {
+  Button,
+  Card,
+  Input,
+  Layout,
+  Spinner,
+  Text,
+  ViewPager,
+} from "@ui-kitten/components";
+import { useDispatch, useSelector } from "react-redux";
+import { updateExerciseAsync } from "./state/program/programSlice";
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +29,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  saveButton: { justifyContent: "flex-start" },
 });
 
 export const ExerciseManagerScreen = ({ route }) => {
@@ -32,28 +42,73 @@ export const ExerciseManagerScreen = ({ route }) => {
   );
 
   const [selectedIndex, setSelectedIndex] = useState(route.params.exercise);
+  const dispatch = useDispatch();
+
+  const exerciseSaving = useSelector((state) => state.program.status);
+
+  const useInputState = (initialValue = "") => {
+    const [value, setValue] = React.useState(initialValue);
+    return { value, onChangeText: setValue };
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ViewPager selectedIndex={selectedIndex} onSelect={setSelectedIndex}>
-        {exercises.map((exercise, index) => (
-          <Layout
-            style={{
-              height: "100%",
-              ...styles.container
-            }}
-            key={index + 1}
-          >
-            <Text category="h3">{exercise.workoutTitle}</Text>
-            <Text category="p1">{exercise.notes}</Text>
-            <Text category="h5">Sets: {exercise.workingSets}</Text>
-            <Text category="h5">Reps: {exercise.reps}</Text>
-            <Text category="h5">Rest: {exercise.rest}</Text>
-            <Text category="h5">Target RPE: {exercise.rpe}</Text>
-            <Text category="h5">Load: {exercise.load}</Text>
-            <Text category="h5">LSRPE: {exercise.lsrpe}</Text>
-          </Layout>
-        ))}
+        {exercises.map((exercise, index) => {
+          const loadInputState = useInputState(exercise.load.toString());
+          const lsrpeInputState = useInputState(exercise.lsrpe.toString());
+
+          return (
+            <Layout
+              style={{
+                height: "100%",
+                ...styles.container,
+              }}
+              key={index + 1}
+            >
+              <Card>
+                <Text category="h3">{exercise.workoutTitle}</Text>
+                <Text category="p1">{exercise.notes}</Text>
+                <Text category="h5">Sets: {exercise.workingSets}</Text>
+                <Text category="h5">Reps: {exercise.reps}</Text>
+                <Text category="h5">Rest: {exercise.rest}</Text>
+                <Text category="h5">Target RPE: {exercise.rpe}</Text>
+                <Input label="Load" {...loadInputState}></Input>
+                <Input label="LSRPE" {...lsrpeInputState}></Input>
+                <Button
+                  style={styles.saveButton}
+                  size="large"
+                  accessoryRight={(props) =>
+                    exerciseSaving === "pending" ? (
+                      <View style={[props.style]}>
+                        <Spinner status="info" />
+                      </View>
+                    ) : (
+                      <View style={[props.style]}></View>
+                    )
+                  }
+                  onPress={() => {
+                    dispatch(
+                      updateExerciseAsync({
+                        phaseIndex: route.params.phase,
+                        weekIndex: route.params.week,
+                        dayIndex: route.params.day,
+                        exerciseIndex: index,
+                        newExerciseValues: {
+                          ...exercise,
+                          load: loadInputState.value,
+                          lsrpe: lsrpeInputState.value,
+                        },
+                      })
+                    );
+                  }}
+                >
+                  Save Changes
+                </Button>
+              </Card>
+            </Layout>
+          );
+        })}
       </ViewPager>
     </SafeAreaView>
   );

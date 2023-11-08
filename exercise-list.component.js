@@ -1,8 +1,9 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
-import { Layout, List, ListItem, Text } from "@ui-kitten/components";
+import { Icon, Layout, List, ListItem, Text } from "@ui-kitten/components";
 import { useSelector } from "react-redux";
+import { useTheme } from "@ui-kitten/components";
 
 const styles = StyleSheet.create({
   container: {
@@ -25,7 +26,7 @@ export const ExerciseListScreen = ({ navigation, route }) => {
       phase: route.params.phase,
       week: route.params.week,
       day: route.params.day,
-      exercise
+      exercise,
     });
   };
 
@@ -38,9 +39,25 @@ export const ExerciseListScreen = ({ navigation, route }) => {
   );
 
   /* Component View */
+  const theme = useTheme();
+
   const renderItem = ({ item, index }) => (
     <ListItem
-      title={() => <Text category="p1">{item.workoutTitle}</Text>}
+      accessoryRight={(props) =>
+        item.lsrpe && (
+          <Icon
+            {...props}
+            name="checkmark-outline"
+            fill={theme["color-success-500"]}
+          ></Icon>
+        )
+      }
+      title={() => <Text category="h6">{item.workoutTitle}</Text>}
+      description={() => (
+        <Text category="s2">
+          {item.workingSets} sets, {item.reps} reps
+        </Text>
+      )}
       onPress={() => {
         navigateManager(index);
       }}
