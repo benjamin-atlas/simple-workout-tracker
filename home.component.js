@@ -39,11 +39,27 @@ export const HomeScreen = ({ navigation }) => {
   const theme = useTheme();
 
   const renderItem = ({ item, index }) => {
-    const phaseComplete = item.weeks.every((week) =>
-      week.days.every((day) =>
-        day.exercises.every((exercise) => exercise.lsrpe)
-      )
-    );
+    const completedExercises = item.weeks.reduce((acc, week) => {
+      return (
+        acc +
+        week.days.reduce((acc, day) => {
+          return acc + day.exercises.reduce((acc, exercise) => {
+            return acc + (exercise.lsrpe ? 1 : 0);
+          }, 0);
+        }, 0)
+      );
+    }, 0);
+
+    const totalExercises = item.weeks.reduce((acc, week) => {
+      return (
+        acc +
+        week.days.reduce((acc, day) => {
+          return acc + day.exercises.length;
+        }, 0)
+      );
+    }, 0);
+
+    const phaseComplete = completedExercises === totalExercises;
 
     return (
       <ListItem
@@ -56,7 +72,8 @@ export const HomeScreen = ({ navigation }) => {
             ></Icon>
           )
         }
-        title={() => <Text category="p1">Phase {index + 1}</Text>}
+        title={() => <Text category="h6">Phase {index + 1}</Text>}
+        description={() => !phaseComplete && <Text category="s2">{Math.floor(completedExercises/totalExercises * 100)}% complete</Text>}
         onPress={() => {
           navigateWeeks(index);
         }}

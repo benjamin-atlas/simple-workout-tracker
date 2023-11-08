@@ -39,7 +39,16 @@ export const DayListScreen = ({ navigation, route }) => {
   const theme = useTheme();
 
   const renderItem = ({ item, index }) => {
-    const dayComplete = item.exercises.every((exercise) => exercise.lsrpe);
+    const completedExercises = item.exercises.reduce((acc, exercise) => {
+      return acc + (exercise.lsrpe ? 1 : 0);
+    }
+    , 0);
+
+    const totalExercises = item.exercises.length;
+
+    const dayComplete = completedExercises === totalExercises;
+    const percentCompletion = Math.floor(completedExercises/totalExercises * 100);
+
     return (
       <ListItem
         accessoryRight={(props) =>
@@ -51,7 +60,8 @@ export const DayListScreen = ({ navigation, route }) => {
             ></Icon>
           )
         }
-        title={() => <Text category="p1">{item.title}</Text>}
+        title={() => <Text category="h6">{item.title}</Text>}
+        description={() => !dayComplete && (percentCompletion > 0) && <Text category="s2">{percentCompletion}% complete</Text>}
         onPress={() => {
           navigateExercise(index);
         }}
