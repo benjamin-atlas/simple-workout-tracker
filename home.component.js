@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
-import { Layout, List, ListItem, Spinner, Text } from "@ui-kitten/components";
+import { Icon, Layout, List, ListItem, Spinner, Text } from "@ui-kitten/components";
 import { populateProgramAsync } from "./state/program/programSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "@ui-kitten/components";
 
 const styles = StyleSheet.create({
   container: {
@@ -35,14 +36,33 @@ export const HomeScreen = ({ navigation }) => {
   const programLoading = useSelector((state) => state.program.status);
 
   /* Component View */
-  const renderItem = ({ item, index }) => (
-    <ListItem
-      title={() => <Text category="p1">Phase {index + 1}</Text>}
-      onPress={() => {
-        navigateWeeks(index);
-      }}
-    />
-  );
+  const theme = useTheme();
+
+  const renderItem = ({ item, index }) => {
+    const phaseComplete = item.weeks.every((week) =>
+      week.days.every((day) =>
+        day.exercises.every((exercise) => exercise.lsrpe)
+      )
+    );
+
+    return (
+      <ListItem
+        accessoryRight={(props) =>
+          phaseComplete && (
+            <Icon
+              {...props}
+              name="checkmark-outline"
+              fill={theme["color-success-500"]}
+            ></Icon>
+          )
+        }
+        title={() => <Text category="p1">Phase {index + 1}</Text>}
+        onPress={() => {
+          navigateWeeks(index);
+        }}
+      />
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

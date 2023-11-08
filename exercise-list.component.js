@@ -31,12 +31,13 @@ export const ExerciseListScreen = ({ navigation, route }) => {
   };
 
   /* State */
-  const exercises = useSelector(
+  const selectedDay = useSelector(
     (state) =>
       state.program.value[route.params.phase].weeks[route.params.week].days[
         route.params.day
-      ].exercises
+      ]
   );
+  const exercises = selectedDay.exercises;
 
   /* Component View */
   const theme = useTheme();
@@ -74,7 +75,7 @@ export const ExerciseListScreen = ({ navigation, route }) => {
           ...styles.container,
         }}
       >
-        <Text category="h3">Exercises</Text>
+        <Text category="h3">{selectedDay.title}</Text>
         <List data={exercises} renderItem={renderItem} style={styles.list} />
       </Layout>
     </SafeAreaView>

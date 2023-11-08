@@ -1,8 +1,9 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
-import { Layout, List, ListItem, Text } from "@ui-kitten/components";
+import { Icon, Layout, List, ListItem, Text } from "@ui-kitten/components";
 import { useSelector } from "react-redux";
+import { useTheme } from "@ui-kitten/components";
 
 const styles = StyleSheet.create({
   container: {
@@ -35,14 +36,28 @@ export const DayListScreen = ({ navigation, route }) => {
   );
 
   /* Component View */
-  const renderItem = ({ item, index }) => (
-    <ListItem
-      title={() => <Text category="p1">{item.title}</Text>}
-      onPress={() => {
-        navigateExercise(index);
-      }}
-    />
-  );
+  const theme = useTheme();
+
+  const renderItem = ({ item, index }) => {
+    const dayComplete = item.exercises.every((exercise) => exercise.lsrpe);
+    return (
+      <ListItem
+        accessoryRight={(props) =>
+          dayComplete && (
+            <Icon
+              {...props}
+              name="checkmark-outline"
+              fill={theme["color-success-500"]}
+            ></Icon>
+          )
+        }
+        title={() => <Text category="p1">{item.title}</Text>}
+        onPress={() => {
+          navigateExercise(index);
+        }}
+      />
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -54,7 +69,7 @@ export const DayListScreen = ({ navigation, route }) => {
           ...styles.container,
         }}
       >
-        <Text category="h3">Days</Text>
+        <Text category="h3">Week {route.params.week + 1}</Text>
         <List data={days} renderItem={renderItem} style={styles.list} />
       </Layout>
     </SafeAreaView>
