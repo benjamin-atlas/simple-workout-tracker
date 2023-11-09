@@ -4,7 +4,7 @@ import * as eva from "@eva-design/eva";
 import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
 import { default as theme } from "./assets/theme/custom-theme.json";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
-import { AppNavigator } from "./navigator.component";
+import { AppNavigator } from "./components/navigator.component";
 import { Provider } from "react-redux";
 import { store } from "./state/store";
 

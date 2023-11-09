@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { SafeAreaView, View } from "react-native";
 import { Button, Layout, Spinner, Text } from "@ui-kitten/components";
-import { populateProgramAsync } from "./state/program/programSlice";
+import { populateProgramAsync } from "../state/program/programSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@ui-kitten/components";
 

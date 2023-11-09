@@ -15,7 +15,7 @@ import {
   ViewPager,
 } from "@ui-kitten/components";
 import { useDispatch, useSelector } from "react-redux";
-import { updateExerciseAsync } from "./state/program/programSlice";
+import { updateExerciseAsync } from "../state/program/programSlice";
 
 export const ExerciseManagerScreen = ({ route }) => {
   /* State */
