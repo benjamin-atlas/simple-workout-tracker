@@ -52,64 +52,66 @@ export const ExerciseManagerScreen = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ViewPager selectedIndex={selectedIndex} onSelect={setSelectedIndex}>
-        {exercises.map((exercise, index) => {
-          const loadInputState = useInputState(exercise.load.toString());
-          const lsrpeInputState = useInputState(exercise.lsrpe.toString());
+    <Layout style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <ViewPager selectedIndex={selectedIndex} onSelect={setSelectedIndex}>
+          {exercises.map((exercise, index) => {
+            const loadInputState = useInputState(exercise.load.toString());
+            const lsrpeInputState = useInputState(exercise.lsrpe.toString());
 
-          return (
-            <Layout
-              style={{
-                height: "100%",
-                ...styles.container,
-              }}
-              key={index + 1}
-            >
-              <Card>
-                <Text category="h3">{exercise.workoutTitle}</Text>
-                <Text category="p1">{exercise.notes}</Text>
-                <Text category="h5">Sets: {exercise.workingSets}</Text>
-                <Text category="h5">Reps: {exercise.reps}</Text>
-                <Text category="h5">Rest: {exercise.rest}</Text>
-                <Text category="h5">Target RPE: {exercise.rpe}</Text>
-                <Input label="Load" {...loadInputState}></Input>
-                <Input label="LSRPE" {...lsrpeInputState}></Input>
-                <Button
-                  style={styles.saveButton}
-                  size="large"
-                  accessoryRight={(props) =>
-                    exerciseSaving === "pending" ? (
-                      <View style={[props.style]}>
-                        <Spinner status="info" />
-                      </View>
-                    ) : (
-                      <View style={[props.style]}></View>
-                    )
-                  }
-                  onPress={() => {
-                    dispatch(
-                      updateExerciseAsync({
-                        phaseIndex: route.params.phase,
-                        weekIndex: route.params.week,
-                        dayIndex: route.params.day,
-                        exerciseIndex: index,
-                        newExerciseValues: {
-                          ...exercise,
-                          load: loadInputState.value,
-                          lsrpe: lsrpeInputState.value,
-                        },
-                      })
-                    );
-                  }}
-                >
-                  Save Changes
-                </Button>
-              </Card>
-            </Layout>
-          );
-        })}
-      </ViewPager>
-    </SafeAreaView>
+            return (
+              <Layout
+                style={{
+                  height: "100%",
+                  ...styles.container,
+                }}
+                key={index + 1}
+              >
+                <Card>
+                  <Text category="h3">{exercise.workoutTitle}</Text>
+                  <Text category="p1">{exercise.notes}</Text>
+                  <Text category="h5">Sets: {exercise.workingSets}</Text>
+                  <Text category="h5">Reps: {exercise.reps}</Text>
+                  <Text category="h5">Rest: {exercise.rest}</Text>
+                  <Text category="h5">Target RPE: {exercise.rpe}</Text>
+                  <Input label="Load" {...loadInputState}></Input>
+                  <Input label="LSRPE" {...lsrpeInputState}></Input>
+                  <Button
+                    style={styles.saveButton}
+                    size="large"
+                    accessoryRight={(props) =>
+                      exerciseSaving === "pending" ? (
+                        <View style={[props.style]}>
+                          <Spinner status="info" />
+                        </View>
+                      ) : (
+                        <View style={[props.style]}></View>
+                      )
+                    }
+                    onPress={() => {
+                      dispatch(
+                        updateExerciseAsync({
+                          phaseIndex: route.params.phase,
+                          weekIndex: route.params.week,
+                          dayIndex: route.params.day,
+                          exerciseIndex: index,
+                          newExerciseValues: {
+                            ...exercise,
+                            load: loadInputState.value,
+                            lsrpe: lsrpeInputState.value,
+                          },
+                        })
+                      );
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                </Card>
+              </Layout>
+            );
+          })}
+        </ViewPager>
+      </SafeAreaView>
+    </Layout>
   );
 };
