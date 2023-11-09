@@ -1,30 +1,15 @@
-import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native";
+import React from "react";
+import { SafeAreaView, View } from "react-native";
 import {
+  Divider,
   Icon,
   Layout,
   List,
   ListItem,
-  Spinner,
   Text,
 } from "@ui-kitten/components";
 import { useSelector } from "react-redux";
 import { useTheme } from "@ui-kitten/components";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  list: {
-    maxHeight: "60%",
-    width: "100%",
-    textAlign: "center",
-    paddingHorizontal: 20,
-  },
-});
 
 export const PhaseListScreen = ({ navigation }) => {
   /* Navigation */
@@ -34,7 +19,6 @@ export const PhaseListScreen = ({ navigation }) => {
 
   /* State */
   const program = useSelector((state) => state.program.value);
-  const programLoading = useSelector((state) => state.program.status);
 
   /* Component View */
   const theme = useTheme();
@@ -67,6 +51,12 @@ export const PhaseListScreen = ({ navigation }) => {
 
     return (
       <ListItem
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 20,
+          rowGap: "10px",
+          backgroundColor: !phaseComplete && theme["color-primary-default"],
+        }}
         accessoryRight={(props) =>
           phaseComplete && (
             <Icon
@@ -93,24 +83,30 @@ export const PhaseListScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Layout
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          ...styles.container,
-        }}
-      >
-        {programLoading !== "pending" ? (
-          <>
-            <Text category="h3">Phases</Text>
-            <List data={program} renderItem={renderItem} style={styles.list} />
-          </>
-        ) : (
-          <Spinner size="giant" />
-        )}
-      </Layout>
-    </SafeAreaView>
+    <Layout
+      style={{
+        flex: 1,
+      }}
+    >
+      <SafeAreaView style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            textAlign: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text category="h3">Phases</Text>
+        </View>
+        <View style={{ flex: 7 }}>
+          <List
+            data={program}
+            renderItem={renderItem}
+            ItemSeparatorComponent={Divider}
+          />
+        </View>
+      </SafeAreaView>
+    </Layout>
   );
 };

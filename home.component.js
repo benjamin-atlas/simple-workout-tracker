@@ -1,24 +1,9 @@
 import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import { Button, Layout, Spinner, Text } from "@ui-kitten/components";
 import { populateProgramAsync } from "./state/program/programSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@ui-kitten/components";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  list: {
-    maxHeight: "60%",
-    width: "100%",
-    textAlign: "center",
-    paddingHorizontal: 20,
-  },
-});
 
 export const HomeScreen = ({ navigation }) => {
   /* Navigation */
@@ -67,27 +52,54 @@ export const HomeScreen = ({ navigation }) => {
   const theme = useTheme();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Layout
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          ...styles.container,
-        }}
-      >
+    <Layout
+      style={{
+        flex: 1,
+        flexDirection: "column",
+      }}
+    >
+      <SafeAreaView style={{ flex: 1, rowGap: "15px" }}>
         {programLoading !== "pending" ? (
           <>
-            <Text category="h1" style={{ textAlign: "center" }}>
-              Simple Workout Tracker
-            </Text>
-            <Button onPress={navigateCurrentExercise}>Resume</Button>
-            <Button onPress={navigatePhases}>View Program</Button>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text category="h1">Simple Workout Tracker</Text>
+            </View>
+            <View
+              style={{
+                paddingHorizontal: 15,
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "15px",
+              }}
+            >
+              <Button onPress={navigatePhases} size="giant" style={{ flex: 1 }}>
+                View Program
+              </Button>
+              <Button
+                onPress={navigateCurrentExercise}
+                size="giant"
+                style={{ flex: 1 }}
+              >
+                Resume
+              </Button>
+            </View>
           </>
         ) : (
-          <Spinner size="giant" />
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Spinner size="giant" />
+          </View>
         )}
-      </Layout>
-    </SafeAreaView>
+      </SafeAreaView>
+    </Layout>
   );
 };

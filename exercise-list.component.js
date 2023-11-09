@@ -1,23 +1,15 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native";
-import { Icon, Layout, List, ListItem, Text } from "@ui-kitten/components";
+import { SafeAreaView, View } from "react-native";
+import {
+  Divider,
+  Icon,
+  Layout,
+  List,
+  ListItem,
+  Text,
+} from "@ui-kitten/components";
 import { useSelector } from "react-redux";
 import { useTheme } from "@ui-kitten/components";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  list: {
-    maxHeight: "60%",
-    width: "100%",
-    textAlign: "center",
-    paddingHorizontal: 20,
-  },
-});
 
 export const ExerciseListScreen = ({ navigation, route }) => {
   /* Navigation */
@@ -42,42 +34,62 @@ export const ExerciseListScreen = ({ navigation, route }) => {
   /* Component View */
   const theme = useTheme();
 
-  const renderItem = ({ item, index }) => (
-    <ListItem
-      accessoryRight={(props) =>
-        item.lsrpe && (
-          <Icon
-            {...props}
-            name="checkmark-outline"
-            fill={theme["color-success-500"]}
-          ></Icon>
-        )
-      }
-      title={() => <Text category="h6">{item.workoutTitle}</Text>}
-      description={() => (
-        <Text category="s2">
-          {item.workingSets} sets, {item.reps} reps
-        </Text>
-      )}
-      onPress={() => {
-        navigateManager(index);
-      }}
-    />
-  );
+  const renderItem = ({ item, index }) => {
+    return (
+      <ListItem
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 20,
+          rowGap: "10px",
+          backgroundColor: !item.lsrpe && theme["color-primary-default"],
+        }}
+        accessoryRight={(props) =>
+          item.lsrpe && (
+            <Icon
+              {...props}
+              name="checkmark-outline"
+              fill={theme["color-success-500"]}
+            ></Icon>
+          )
+        }
+        title={() => <Text category="h6">{item.workoutTitle}</Text>}
+        description={() => (
+          <Text category="s2">
+            {item.workingSets} sets, {item.reps} reps
+          </Text>
+        )}
+        onPress={() => {
+          navigateManager(index);
+        }}
+      />
+    );
+  };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Layout
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          ...styles.container,
-        }}
-      >
-        <Text category="h3">{selectedDay.title}</Text>
-        <List data={exercises} renderItem={renderItem} style={styles.list} />
-      </Layout>
-    </SafeAreaView>
+    <Layout
+      style={{
+        flex: 1,
+      }}
+    >
+      <SafeAreaView style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            textAlign: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text category="h3">{selectedDay.title}</Text>
+        </View>
+        <View style={{ flex: 7 }}>
+          <List
+            data={exercises}
+            renderItem={renderItem}
+            ItemSeparatorComponent={Divider}
+          />
+        </View>
+      </SafeAreaView>
+    </Layout>
   );
 };
