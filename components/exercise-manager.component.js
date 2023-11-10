@@ -8,6 +8,7 @@ import {
 import {
   Button,
   Card,
+  Divider,
   Input,
   Layout,
   Spinner,
@@ -16,6 +17,7 @@ import {
 } from "@ui-kitten/components";
 import { useDispatch, useSelector } from "react-redux";
 import { updateExerciseAsync } from "../state/program/programSlice";
+import { useTheme } from "@ui-kitten/components";
 
 export const ExerciseManagerScreen = ({ route }) => {
   /* State */
@@ -36,13 +38,36 @@ export const ExerciseManagerScreen = ({ route }) => {
     return { value, onChangeText: setValue };
   };
 
+  /* Component View */
+  const theme = useTheme();
+
+  const MetadataItem = ({ label, value }) => (
+    <>
+      <Layout
+        level="1"
+        style={{
+          padding: 16,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text appearance="hint" category="s1">
+          {label}
+        </Text>
+        <Text category="s1">{value}</Text>
+      </Layout>
+      <Divider />
+    </>
+  );
+
   return (
-    <Layout style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <Layout style={{ flex: 1 }} level="2">
+        <SafeAreaView style={{ flex: 1 }}>
           <ViewPager
             style={{ flex: 1 }}
             selectedIndex={selectedIndex}
@@ -60,19 +85,57 @@ export const ExerciseManagerScreen = ({ route }) => {
                     justifyContent: "center",
                   }}
                   key={index + 1}
+                  level="2"
                 >
-                  <Card>
-                    <View style={{ flexDirection: "column", rowGap: "20px" }}>
-                      <Text category="h3">{exercise.workoutTitle}</Text>
-                      <Text category="p1">{exercise.notes}</Text>
-                      <Text category="h5">Sets: {exercise.workingSets}</Text>
-                      <Text category="h5">Reps: {exercise.reps}</Text>
-                      <Text category="h5">Rest: {exercise.rest}</Text>
-                      <Text category="h5">Target RPE: {exercise.rpe}</Text>
-                      <Input label="Load" {...loadInputState}></Input>
-                      <Input label="LSRPE" {...lsrpeInputState}></Input>
+                  <Card
+                    style={{
+                      width: "100%",
+                      backgroundColor: theme["background-basic-color-3"],
+                    }}
+                    appearance="filled"
+                  >
+                    <View style={{ flexDirection: "column" }}>
+                      <Text
+                        category="h3"
+                        style={{ marginBottom: 10, width: "100%" }}
+                      >
+                        {exercise.workoutTitle}
+                      </Text>
+                      <Text
+                        category="p1"
+                        style={{ marginBottom: 10 }}
+                        appearance="hint"
+                      >
+                        {exercise.notes}
+                      </Text>
+                      <MetadataItem
+                        label="Sets"
+                        value={exercise.workingSets}
+                      ></MetadataItem>
+                      <MetadataItem
+                        label="Reps"
+                        value={exercise.reps}
+                      ></MetadataItem>
+                      <MetadataItem
+                        label="Rest"
+                        value={exercise.rest}
+                      ></MetadataItem>
+                      <MetadataItem
+                        label="Target RPE"
+                        value={exercise.rpe}
+                      ></MetadataItem>
+                      <Input
+                        label="Load"
+                        {...loadInputState}
+                        style={{ marginTop: 25 }}
+                      ></Input>
+                      <Input
+                        label="LSRPE"
+                        {...lsrpeInputState}
+                        style={{ marginTop: 10 }}
+                      ></Input>
                       <Button
-                        style={{ justifyContent: "flex-start" }}
+                        style={{ justifyContent: "flex-start", marginTop: 25 }}
                         size="large"
                         accessoryRight={(props) =>
                           exerciseSaving === "pending" ? (
@@ -107,8 +170,8 @@ export const ExerciseManagerScreen = ({ route }) => {
               );
             })}
           </ViewPager>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </Layout>
+        </SafeAreaView>
+      </Layout>
+    </KeyboardAvoidingView>
   );
 };
