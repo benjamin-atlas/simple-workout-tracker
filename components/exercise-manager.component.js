@@ -89,21 +89,26 @@ export const ExerciseManagerScreen = ({ route }) => {
                 >
                   <Card
                     style={{
-                      width: "100%",
+                      width: "95%",
                       backgroundColor: theme["background-basic-color-3"],
                     }}
-                    appearance="filled"
                   >
-                    <View style={{ flexDirection: "column" }}>
+                    <View
+                      style={{ flexDirection: "column", marginHorizontal: -24 }}
+                    >
                       <Text
                         category="h3"
-                        style={{ marginBottom: 10, width: "100%" }}
+                        style={{
+                          marginBottom: 10,
+                          paddingHorizontal: 24,
+                          width: "98%",
+                        }}
                       >
                         {exercise.workoutTitle}
                       </Text>
                       <Text
                         category="p1"
-                        style={{ marginBottom: 10 }}
+                        style={{ marginBottom: 25, paddingHorizontal: 24 }}
                         appearance="hint"
                       >
                         {exercise.notes}
@@ -127,15 +132,19 @@ export const ExerciseManagerScreen = ({ route }) => {
                       <Input
                         label="Load"
                         {...loadInputState}
-                        style={{ marginTop: 25 }}
+                        style={{ marginTop: 25, marginHorizontal: 5 }}
                       ></Input>
                       <Input
                         label="LSRPE"
                         {...lsrpeInputState}
-                        style={{ marginTop: 10 }}
+                        style={{ marginTop: 10, marginHorizontal: 5 }}
                       ></Input>
                       <Button
-                        style={{ justifyContent: "flex-start", marginTop: 25 }}
+                        style={{
+                          justifyContent: "flex-start",
+                          marginTop: 25,
+                          marginHorizontal: 24,
+                        }}
                         size="large"
                         accessoryRight={(props) =>
                           exerciseSaving === "pending" ? (
