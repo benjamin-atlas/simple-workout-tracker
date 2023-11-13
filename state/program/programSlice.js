@@ -8,12 +8,21 @@ const programSlice = createSlice({
   initialState: {
     value: [],
     status: "idle",
+    currentExerciseIndexes: {
+      currentPhaseIndex: 0,
+      currentWeekIndex: 0,
+      currentDayIndex: 0,
+      currentExerciseIndex: 0,
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(populateProgramAsync.fulfilled, (state, action) => {
         state.value = action.payload;
         state.status = "idle";
+        state.currentExerciseIndexes = {
+          ...getCurrentExceriseIndexes(action.payload),
+        };
       })
       .addCase(populateProgramAsync.pending, (state) => {
         state.status = "pending";
@@ -21,6 +30,9 @@ const programSlice = createSlice({
       .addCase(updateExerciseAsync.fulfilled, (state, action) => {
         state.value = action.payload;
         state.status = "idle";
+        state.currentExerciseIndexes = {
+          ...getCurrentExceriseIndexes(action.payload),
+        };
       })
       .addCase(updateExerciseAsync.pending, (state) => {
         state.status = "pending";
@@ -74,5 +86,33 @@ export const updateExerciseAsync = createAsyncThunk(
     return newProgram;
   }
 );
+
+const getCurrentExceriseIndexes = (program) => {
+  let currentExerciseIndex = 0;
+  let currentDayIndex = 0;
+  let currentWeekIndex = 0;
+  let currentPhaseIndex = 0;
+
+  program.find((phase, phaseIndex) => {
+    currentPhaseIndex = phaseIndex;
+    return phase.weeks.find((week, weekIndex) => {
+      currentWeekIndex = weekIndex;
+      return week.days.find((day, dayIndex) => {
+        currentDayIndex = dayIndex;
+        return day.exercises.find((exercise, exerciseIndex) => {
+          currentExerciseIndex = exerciseIndex;
+          return !exercise.lsrpe;
+        });
+      });
+    });
+  });
+
+  return {
+    currentPhaseIndex,
+    currentWeekIndex,
+    currentDayIndex,
+    currentExerciseIndex,
+  };
+};
 
 export default programSlice.reducer;

@@ -26,6 +26,9 @@ export const DayListScreen = ({ navigation, route }) => {
     (state) =>
       state.program.value[route.params.phase].weeks[route.params.week].days
   );
+  const currentExerciseIndexes = useSelector(
+    (state) => state.program.currentExerciseIndexes
+  );
 
   /* Component View */
   const theme = useTheme();
@@ -41,6 +44,10 @@ export const DayListScreen = ({ navigation, route }) => {
     const percentCompletion = Math.floor(
       (completedExercises / totalExercises) * 100
     );
+    const isCurrentDay =
+      currentExerciseIndexes.currentPhaseIndex === route.params.phase &&
+      currentExerciseIndexes.currentWeekIndex === route.params.week &&
+      currentExerciseIndexes.currentDayIndex === index;
 
     return (
       <ListItem
@@ -48,10 +55,9 @@ export const DayListScreen = ({ navigation, route }) => {
           paddingHorizontal: 20,
           paddingVertical: 20,
           rowGap: "10px",
-          backgroundColor:
-            !dayComplete &&
-            percentCompletion > 0 &&
-            theme["color-primary-default"],
+          backgroundColor: isCurrentDay
+            ? theme["color-primary-default"]
+            : "transparent",
         }}
         accessoryRight={(props) =>
           dayComplete && (
@@ -64,8 +70,7 @@ export const DayListScreen = ({ navigation, route }) => {
         }
         title={() => <Text category="h6">{item.title}</Text>}
         description={() =>
-          !dayComplete &&
-          percentCompletion > 0 && (
+          isCurrentDay && (
             <Text category="s2">{percentCompletion}% complete</Text>
           )
         }

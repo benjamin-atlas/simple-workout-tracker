@@ -19,6 +19,9 @@ export const PhaseListScreen = ({ navigation }) => {
 
   /* State */
   const program = useSelector((state) => state.program.value);
+  const currentExerciseIndexes = useSelector(
+    (state) => state.program.currentExerciseIndexes
+  );
 
   /* Component View */
   const theme = useTheme();
@@ -48,6 +51,7 @@ export const PhaseListScreen = ({ navigation }) => {
     }, 0);
 
     const phaseComplete = completedExercises === totalExercises;
+    const isCurrentPhase = currentExerciseIndexes.currentPhaseIndex === index;
 
     return (
       <ListItem
@@ -55,7 +59,9 @@ export const PhaseListScreen = ({ navigation }) => {
           paddingHorizontal: 20,
           paddingVertical: 20,
           rowGap: "10px",
-          backgroundColor: !phaseComplete && theme["color-primary-default"],
+          backgroundColor: isCurrentPhase
+            ? theme["color-primary-default"]
+            : "transparent",
         }}
         accessoryRight={(props) =>
           phaseComplete && (
@@ -68,7 +74,7 @@ export const PhaseListScreen = ({ navigation }) => {
         }
         title={() => <Text category="h6">Phase {index + 1}</Text>}
         description={() =>
-          !phaseComplete && (
+          isCurrentPhase && (
             <Text category="s2">
               {Math.floor((completedExercises / totalExercises) * 100)}%
               complete

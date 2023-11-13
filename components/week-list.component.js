@@ -21,6 +21,9 @@ export const WeekListScreen = ({ navigation, route }) => {
   const weeks = useSelector(
     (state) => state.program.value[route.params.phase].weeks
   );
+  const currentExerciseIndexes = useSelector(
+    (state) => state.program.currentExerciseIndexes
+  );
 
   /* Component View */
   const theme = useTheme();
@@ -43,6 +46,9 @@ export const WeekListScreen = ({ navigation, route }) => {
     const percentCompletion = Math.floor(
       (completedExercises / totalExercises) * 100
     );
+    const isCurrentWeek =
+      currentExerciseIndexes.currentPhaseIndex === route.params.phase &&
+      currentExerciseIndexes.currentWeekIndex === index;
 
     return (
       <ListItem
@@ -50,10 +56,9 @@ export const WeekListScreen = ({ navigation, route }) => {
           paddingHorizontal: 20,
           paddingVertical: 20,
           rowGap: "10px",
-          backgroundColor:
-            !weekComplete &&
-            percentCompletion > 0 &&
-            theme["color-primary-default"],
+          backgroundColor: isCurrentWeek
+            ? theme["color-primary-default"]
+            : "transparent",
         }}
         accessoryRight={(props) =>
           weekComplete && (
@@ -66,8 +71,7 @@ export const WeekListScreen = ({ navigation, route }) => {
         }
         title={() => <Text category="h6">Week {index + 1}</Text>}
         description={() =>
-          !weekComplete &&
-          percentCompletion > 0 && (
+          isCurrentWeek && (
             <Text category="s2">{percentCompletion}% complete</Text>
           )
         }

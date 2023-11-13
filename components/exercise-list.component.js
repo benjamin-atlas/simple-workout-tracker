@@ -30,18 +30,29 @@ export const ExerciseListScreen = ({ navigation, route }) => {
       ]
   );
   const exercises = selectedDay.exercises;
+  const currentExerciseIndexes = useSelector(
+    (state) => state.program.currentExerciseIndexes
+  );
 
   /* Component View */
   const theme = useTheme();
 
   const renderItem = ({ item, index }) => {
+    const isCurrentExercise =
+      currentExerciseIndexes.currentPhaseIndex === route.params.phase &&
+      currentExerciseIndexes.currentWeekIndex === route.params.week &&
+      currentExerciseIndexes.currentDayIndex === route.params.day &&
+      currentExerciseIndexes.currentExerciseIndex === index;
+
     return (
       <ListItem
         style={{
           paddingHorizontal: 20,
           paddingVertical: 20,
           rowGap: "10px",
-          backgroundColor: !item.lsrpe && theme["color-primary-default"],
+          backgroundColor: isCurrentExercise
+            ? theme["color-primary-default"]
+            : "transparent",
         }}
         accessoryRight={(props) =>
           item.lsrpe && (

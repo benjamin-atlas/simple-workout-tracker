@@ -12,30 +12,11 @@ export const HomeScreen = ({ navigation }) => {
   };
 
   const navigateCurrentExercise = () => {
-    let currentExerciseIndex = 0;
-    let currentDayIndex = 0;
-    let currentWeekIndex = 0;
-    let currentPhaseIndex = 0;
-
-    program.find((phase, phaseIndex) => {
-      currentPhaseIndex = phaseIndex;
-      return phase.weeks.find((week, weekIndex) => {
-        currentWeekIndex = weekIndex;
-        return week.days.find((day, dayIndex) => {
-          currentDayIndex = dayIndex;
-          return day.exercises.find((exercise, exerciseIndex) => {
-            currentExerciseIndex = exerciseIndex;
-            return !exercise.lsrpe;
-          });
-        });
-      });
-    });
-
     navigation.navigate("ExerciseManager", {
-      phase: currentPhaseIndex,
-      week: currentWeekIndex,
-      day: currentDayIndex,
-      exercise: currentExerciseIndex,
+      phase: currentExerciseIndexes.currentPhaseIndex,
+      week: currentExerciseIndexes.currentWeekIndex,
+      day: currentExerciseIndexes.currentDayIndex,
+      exercise: currentExerciseIndexes.currentExerciseIndex,
     });
   };
 
@@ -45,12 +26,12 @@ export const HomeScreen = ({ navigation }) => {
     dispatch(populateProgramAsync());
   }, []);
 
-  const program = useSelector((state) => state.program.value);
+  const currentExerciseIndexes = useSelector(
+    (state) => state.program.currentExerciseIndexes
+  );
   const programLoading = useSelector((state) => state.program.status);
 
   /* Component View */
-  const theme = useTheme();
-
   return (
     <Layout
       style={{
