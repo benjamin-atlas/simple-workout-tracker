@@ -3,7 +3,7 @@ import { SafeAreaView, View } from "react-native";
 import { Button, Layout, Spinner, Text } from "@ui-kitten/components";
 import { populateProgramAsync } from "../state/program/programSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useTheme } from "@ui-kitten/components";
+import { CommonActions } from "@react-navigation/native";
 
 export const HomeScreen = ({ navigation }) => {
   /* Navigation */
@@ -12,12 +12,43 @@ export const HomeScreen = ({ navigation }) => {
   };
 
   const navigateCurrentExercise = () => {
-    navigation.navigate("ExerciseManager", {
-      phase: currentExerciseIndexes.currentPhaseIndex,
-      week: currentExerciseIndexes.currentWeekIndex,
-      day: currentExerciseIndexes.currentDayIndex,
-      exercise: currentExerciseIndexes.currentExerciseIndex,
+    const resetAction = CommonActions.reset({
+      index: 4,
+      routes: [
+        { name: "Home" },
+        { name: "Phases" },
+        {
+          name: "Weeks",
+          params: { phase: currentExerciseIndexes.currentPhaseIndex },
+        },
+        {
+          name: "Days",
+          params: {
+            phase: currentExerciseIndexes.currentPhaseIndex,
+            week: currentExerciseIndexes.currentWeekIndex,
+          },
+        },
+        {
+          name: "Exercises",
+          params: {
+            phase: currentExerciseIndexes.currentPhaseIndex,
+            week: currentExerciseIndexes.currentWeekIndex,
+            day: currentExerciseIndexes.currentDayIndex,
+          },
+        },
+        {
+          name: "ExerciseManager",
+          params: {
+            phase: currentExerciseIndexes.currentPhaseIndex,
+            week: currentExerciseIndexes.currentWeekIndex,
+            day: currentExerciseIndexes.currentDayIndex,
+            exercise: currentExerciseIndexes.currentExerciseIndex,
+          },
+        },
+      ],
     });
+
+    navigation.dispatch(resetAction);
   };
 
   /* State */
